@@ -1,0 +1,44 @@
+use WAREHOUSE ECOM_DEV_WH;
+USE DATABASE SAAS_REVENUE_DB;
+
+-- ============================================================
+-- Staging View: STG_SUBSCRIBERS
+-- ============================================================
+CREATE OR REPLACE VIEW STG_SCHEMA.STG_SUBSCRIBERS AS
+SELECT 
+    SUBSCRIBER_ID,
+    TRIM(COMPANY_NAME) AS COMPANY_NAME,
+    TRIM(LAST_NAME) AS LAST_NAME,
+    LOWER(TRIM(EMAIL)) AS EMAIL,
+    COALESCE(TRIM(REGION), 'Unknown') AS REGION,
+    SIGNUP_DATE,
+    INITCAP(TRIM(ACCOUNT_STATUS)) AS ACCOUNT_STATUS
+FROM RAW_SCHEMA.SUBSCRIBERS_RAW;
+
+-- ============================================================
+-- Staging View: STG_SUBSCRIPTIONS
+-- ============================================================
+CREATE OR REPLACE VIEW STG_SCHEMA.STG_SUBSCRIPTIONS AS
+SELECT 
+    SUBSCRIPTION_ID,
+    SUBSCRIBER_ID,
+    SUBSCRIPTION_TIER,
+    MRR_VALUE,
+    LOWER(TRIM(BILLING_CYCLE)) AS BILLING_CYCLE,
+    SUBSCRIPTION_START_DATE,
+    CANCELLATION_DATE,
+   
+FROM RAW_SCHEMA.SUBSCRIPTIONS_RAW;
+
+-- ============================================================
+-- Staging View: STG_SUPPORT_TICKETS
+-- ============================================================
+CREATE OR REPLACE VIEW STG_SCHEMA.STG_SUPPORT_TICKETS AS
+SELECT 
+    TICKET_ID,
+    SUBSCRIBER_ID,
+    TRIM(ISSUE_CATEGORY) AS ISSUE_CATEGORY,
+    INITCAP(TRIM(SEVERITY)) AS SEVERITY,
+    RESOLUTION_TIME_HOURS,
+    TICKET_DATE
+FROM RAW_SCHEMA.SUPPORT_TICKETS_RAW;
